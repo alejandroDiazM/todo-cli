@@ -47,7 +47,7 @@ def mock_json_file(tmp_path):
 
 @pytest.mark.parametrize(
     "description, priority, expected",
-    {
+    [
         pytest.param(
             test_data1["description"],
             test_data1["priority"],
@@ -58,7 +58,7 @@ def mock_json_file(tmp_path):
             test_data2["priority"],
             (test_data2["todo"], SUCCESS),
         ),
-    },
+    ],
 )
 def test_add(mock_json_file, description, priority, expected):
     todoer = rptodo.Todoer(mock_json_file)
