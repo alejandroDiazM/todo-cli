@@ -96,7 +96,7 @@ def list_all() -> None:
     )
     headers = "".join(columns)
     typer.secho(headers, fg=typer.colors.BLUE, bold=True)
-    typer.secho("-" * len(headers), fg=typer.colors.BLUE)
+    typer.secho("-" * len(headers), fg=typer.colors.YELLOW)
     for id, todo in enumerate(todo_list, 1):
         desc, priority, done = todo.values()
         typer.secho(
@@ -106,7 +106,7 @@ def list_all() -> None:
             f"| {desc}",
             fg=typer.colors.BLUE,
         )
-    typer.secho("-" * len(headers) + "\n", fg=typer.colors.BLUE)
+    typer.secho("-" * len(headers) + "\n", fg=typer.colors.YELLOW)
 
 def _version_callback(value: bool) -> None:
     if value:
