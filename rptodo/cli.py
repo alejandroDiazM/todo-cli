@@ -57,17 +57,17 @@ def get_todoer() -> rptodo.Todoer:
         )
         raise typer.Exit(1)
 
-@app.command
+@app.command()
 def add(
     description: List[str] = typer.Argument(...),
     priority: int = typer.Option(2, "--priority", "-p", min=1, max=3),
 ) -> None:
-    '''Add a new to-do with a description.'''
+    """Add a new to-do with a description."""
     todoer = get_todoer()
     todo, error = todoer.add(description, priority)
     if error:
         typer.secho(
-            f'Adding to-do failed with "{ERRORS[error]}"', fg=typer.colors.RED,
+            f'Adding to-do failed with "{ERRORS[error]}"', fg=typer.colors.RED
         )
         raise typer.Exit(1)
     else:
@@ -77,6 +77,36 @@ def add(
             fg=typer.colors.GREEN,
         )
 
+@app.command(name="list")
+def list_all() -> None:
+    """List all to-dos."""
+    todoer = get_todoer()
+    todo_list = todoer.get_todo_list()
+    if len(todo_list) == 0:
+        typer.secho(
+            "There are no tasks in the to-do list yet", fg=typer.colors.RED
+        )
+        raise typer.Exit(1)
+    typer.secho("\nto-do list:\n", fg=typer.colors.BLUE, bold=True)
+    columns = (
+        "ID. ",
+        "| Priority  ",
+        "| Done  ",
+        "| Description  ",
+    )
+    headers = "".join(columns)
+    typer.secho(headers, fg=typer.colors.BLUE, bold=True)
+    typer.secho("-" * len(headers), fg=typer.colors.BLUE)
+    for id, todo in enumerate(todo_list, 1):
+        desc, priority, done = todo.values()
+        typer.secho(
+            f"{id}{(len(columns[0]) - len(str(id))) * ' '}"
+            f"| ({priority}){(len(columns[1]) - len(str(priority)) - 4) * ' '}"
+            f"| {done}{(len(columns[2]) - len(str(done)) - 2) * ' '}"
+            f"| {desc}",
+            fg=typer.colors.BLUE,
+        )
+    typer.secho("-" * len(headers) + "\n", fg=typer.colors.BLUE)
 
 def _version_callback(value: bool) -> None:
     if value:
